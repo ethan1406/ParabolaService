@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package web;
+package services;
 
-import "com/parabola/web/company.proto";
+import "com/parabola/web/services/company.proto";
 
 option java_multiple_files = true;
-option java_package = "com.parabola.web";
+option java_package = "com.parabola.web.services";
 option java_outer_classname = "ObjectServiceProtos";
 
 service ObjectServce {
@@ -22,7 +22,7 @@ message Object {
 }
 
 message GetAllObjectsInProjectForUserRequest {
-  Compnay company = 1;
+  Company company = 1;
   int32 project_id = 2;
 }
 
@@ -31,8 +31,8 @@ message GetAllObjectsInProjectForUserResponse {
 }
 
 message AddCompanyToObjectRequest {
-  Compnay company = 1;
-  int32 project_id = 2
+  Company company = 1;
+  int32 project_id = 2;
 }
 
 message AddCompanyToObjectResponse {}

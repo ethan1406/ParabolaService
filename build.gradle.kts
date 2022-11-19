@@ -5,7 +5,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	kotlin("jvm") version "1.6.21"
 	id("com.google.protobuf") version "0.8.18"
-	id("org.springframework.boot") version "2.7.0"
 }
 
 group = "com.parabola.web"
@@ -19,9 +18,6 @@ ext["coroutinesVersion"] = "1.6.4"
 
 repositories {
 	mavenCentral()
-	flatDir {
-		dirs("libs")
-	}
 }
 
 sourceSets {

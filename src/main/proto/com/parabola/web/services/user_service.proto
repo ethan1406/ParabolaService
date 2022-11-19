@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package web;
+package services;
 
 option java_multiple_files = true;
-option java_package = "com.parabola.web";
+option java_package = "com.parabola.web.services";
 option java_outer_classname = "UserServiceProtos";
 
 
-service ProjectService {
-  rpc Signup(SignupRequest) returns (SignupResponse)
+service UserService {
+  rpc Signup(SignupRequest) returns (SignupResponse);
   rpc GetAllProjects(GetAllProjectsRequest) returns (GetAllProjectsResponse);
   rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
 }

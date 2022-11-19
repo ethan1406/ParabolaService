@@ -1,5 +1,6 @@
 package com.parabola.web
 
+import com.parabola.web.services.UserService
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.grpc.Server
@@ -9,10 +10,11 @@ import javax.sql.DataSource
 
 class ParabolaApplication(
     private val port: Int,
-    //dataSource: DataSource,
+    dataSource: DataSource,
 ) {
     val server: Server = ServerBuilder
         .forPort(port)
+        .addService(UserService(dataSource))
         .build()
 
 
@@ -35,16 +37,15 @@ class ParabolaApplication(
     fun blockUntilShutdown() {
         server.awaitTermination()
     }
-
 }
-
 
 fun main() {
     BasicConfigurator.configure()
 
     val port = System.getenv("PORT")?.toInt() ?: 50051
 
-    val server = ParabolaApplication(port)
+    val datasource = getHikariDataSource()
+    val server = ParabolaApplication(port,datasource)
 
     server.start()
     server.blockUntilShutdown()
