@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package web;
+
+option java_multiple_files = true;
+option java_package = "com.parabola.web";
+option java_outer_classname = "UserServiceProtos";
+
+
+service ProjectService {
+  rpc Signup(SignupRequest) returns (SignupResponse)
+  rpc GetAllProjects(GetAllProjectsRequest) returns (GetAllProjectsResponse);
+  rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+}
+
+
+message SignupRequest {
+  string user_name = 1;
+  string company = 2;
+  string role = 3;
+}
+
+message SignupResponse {}
+
+message Project {
+  int32 id = 1;
+  string name = 2;
+}
+
+message GetAllProjectsRequest {
+  string user_name = 1;
+}
+
+message GetAllProjectsResponse {
+  repeated Project projects = 1;
+}
+
+message CreateProjectRequest {
+  string project_name = 1;
+}
+
+message CreateProjectResponse {
+  int32 project_id = 1;
+}

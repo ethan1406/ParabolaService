@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package web;
+
+import "com/parabola/web/company.proto";
+
+option java_multiple_files = true;
+option java_package = "com.parabola.web";
+option java_outer_classname = "ProjectServiceProtos";
+
+
+service ProjectService {
+
+  rpc GetAllCompanies(GetAllCompaniesRequest) returns (GetAllCompaniesResponse);
+  rpc AddCompanyToProject(AddCompanyToProjectRequest) returns (AddCompanyToProjectResponse);
+  rpc GetAllCompaniesInProject(GetAllCompaniesInProjectRequest) returns (GetAllCompaniesInProjectResponse);
+
+  rpc CreateObjectInProject(CreateObjectRequest) returns (CreateObjectResponse);
+
+}
+
+message GetAllCompaniesRequest {}
+
+message GetAllCompaniesResponse {
+  repeated Company companies = 1;
+}
+
+message AddCompanyToProjectRequest {
+  Company company = 1;
+}
+
+message AddCompanyToProjectResponse {}
+
+message GetAllCompaniesInProjectRequest {
+  int32 project_id = 1;
+}
+
+message GetAllCompaniesInProjectResponse {}
+
+message CreateObjectRequest {
+  int32 project_id = 1;
+  string object_name = 2;
+}
+
+message CreateObjectResponse {}
