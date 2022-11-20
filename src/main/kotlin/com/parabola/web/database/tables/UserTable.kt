@@ -1,11 +1,11 @@
 package com.parabola.web.database.tables
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.id.IdTable
 
-object UserTable: Table("USER") {
-    val username = varchar("username", 30)
+object UserTable: IdTable<String>("USER") {
+    val username = varchar("username", 30).uniqueIndex()
     val companyName = varchar("company_name", 30).uniqueIndex()
-    val role = varchar("company_name", 30)
+    val role = varchar("role", 30)
 
-    override val primaryKey = PrimaryKey(username)
+    override val id = username.entityId()
 }

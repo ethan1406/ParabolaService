@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package services;
 
+import "com/parabola/web/services/company.proto";
+
 option java_multiple_files = true;
 option java_package = "com.parabola.web.services";
 option java_outer_classname = "UserServiceProtos";
@@ -28,7 +30,7 @@ message Project {
 }
 
 message GetAllProjectsRequest {
-  string user_name = 1;
+  Company company = 1;
 }
 
 message GetAllProjectsResponse {
@@ -37,6 +39,8 @@ message GetAllProjectsResponse {
 
 message CreateProjectRequest {
   string project_name = 1;
+  // the company that is creating the project
+  Company company = 2;
 }
 
 message CreateProjectResponse {

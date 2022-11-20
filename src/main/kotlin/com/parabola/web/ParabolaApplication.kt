@@ -1,5 +1,7 @@
 package com.parabola.web
 
+import com.parabola.web.database.scripts.InitTableScript
+import com.parabola.web.services.ProjectService
 import com.parabola.web.services.UserService
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -15,6 +17,7 @@ class ParabolaApplication(
     val server: Server = ServerBuilder
         .forPort(port)
         .addService(UserService(dataSource))
+        .addService(ProjectService(dataSource))
         .build()
 
 
@@ -45,7 +48,8 @@ fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 50051
 
     val datasource = getHikariDataSource()
-    val server = ParabolaApplication(port,datasource)
+    //InitTableScript.init(datasource)
+    val server = ParabolaApplication(port, datasource)
 
     server.start()
     server.blockUntilShutdown()

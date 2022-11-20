@@ -1,5 +1,8 @@
 package com.parabola.web.services
 
+import com.parabola.web.database.daos.UserDao
+import com.parabola.web.database.tables.ProjectTable
+import com.parabola.web.database.tables.ProjectUserTable
 import com.parabola.web.database.tables.UserTable
 import io.grpc.Status
 import io.grpc.StatusException
@@ -40,12 +43,59 @@ class UserService(
                     throw StatusException(Status.ALREADY_EXISTS)
                 }
 
-                throw StatusException(Status.INTERNAL)
+                throw StatusException(Status.UNKNOWN)
             } catch (e: Exception) {
                 logger.error(e) { "error creating for ${request.userName}" }
+                throw StatusException(Status.UNKNOWN)
             }
         }
 
         return signupResponse { }
     }
+
+    override suspend fun createProject(request: CreateProjectRequest): CreateProjectResponse {
+
+        withContext(Dispatchers.IO) {
+            transaction(Database.connect(dataSource)) {
+                addLogger(StdOutSqlLogger)
+
+                val projectId = ProjectTable.insert {
+                    it[projectName] = request.projectName
+                } get ProjectTable.id
+
+                ProjectUserTable.insert {
+                    it[user] = request.company.username
+                    it[companyName] = request.company.companyName
+                    it[project] = projectId
+                }
+            }
+        }
+
+        return createProjectResponse { }
+    }
+
+    override suspend fun getAllProjects(request: GetAllProjectsRequest): GetAllProjectsResponse {
+
+        val userProjects = withContext(Dispatchers.IO) {
+            runCatching {
+                transaction(Database.connect(dataSource)) {
+                    addLogger(StdOutSqlLogger)
+                    UserDao.findById(request.company.username)?.projects?.map {
+                            project {
+                                id = it.id.value
+                                name = it.projectName
+                            }
+                        }
+                }
+            }.onFailure {
+                logger.error(it) { }
+                throw StatusException(Status.UNKNOWN)
+            }
+        }
+
+        return getAllProjectsResponse {
+            projects.addAll(userProjects.getOrNull() ?: emptyList())
+        }
+    }
+
 }
