@@ -17,9 +17,7 @@ service UserService {
 
 
 message SignupRequest {
-  string user_name = 1;
-  string company = 2;
-  string role = 3;
+  Company company = 1;
 }
 
 message SignupResponse {}
@@ -30,7 +28,7 @@ message Project {
 }
 
 message GetAllProjectsRequest {
-  Company company = 1;
+  string username = 1;
 }
 
 message GetAllProjectsResponse {

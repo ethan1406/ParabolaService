@@ -30,13 +30,13 @@ class UserService(
                     addLogger(StdOutSqlLogger)
 
                     UserTable.insert {
-                        it[username] = request.userName
-                        it[companyName] = request.company
-                        it[role] = request.role
+                        it[username] = request.company.username
+                        it[companyName] = request.company.companyName
+                        it[role] = request.company.role
                     }
                 }
             } catch (e: ExposedSQLException) {
-                logger.error(e) { "error creating user for ${request.userName}" }
+                logger.error(e) { "error creating user for ${request.company}" }
 
                 if (e.sqlState == "23505" || e.sqlState == "23000") {
                     logger.error("user already exists")
@@ -45,7 +45,7 @@ class UserService(
 
                 throw StatusException(Status.UNKNOWN)
             } catch (e: Exception) {
-                logger.error(e) { "error creating for ${request.userName}" }
+                logger.error(e) { "error creating for ${request.company}" }
                 throw StatusException(Status.UNKNOWN)
             }
         }
@@ -80,7 +80,7 @@ class UserService(
             runCatching {
                 transaction(Database.connect(dataSource)) {
                     addLogger(StdOutSqlLogger)
-                    UserDao.findById(request.company.username)?.projects?.map {
+                    UserDao.findById(request.username)?.projects?.map {
                             project {
                                 id = it.id.value
                                 name = it.projectName
@@ -97,5 +97,4 @@ class UserService(
             projects.addAll(userProjects.getOrNull() ?: emptyList())
         }
     }
-
 }

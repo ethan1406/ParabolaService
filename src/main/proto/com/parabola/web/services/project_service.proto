@@ -27,6 +27,7 @@ message GetAllCompaniesResponse {
 
 message AddCompanyToProjectRequest {
   Company company = 1;
+  int32 project_id = 2;
 }
 
 message AddCompanyToProjectResponse {}
@@ -35,11 +36,15 @@ message GetAllCompaniesInProjectRequest {
   int32 project_id = 1;
 }
 
-message GetAllCompaniesInProjectResponse {}
+message GetAllCompaniesInProjectResponse {
+  repeated Company companies = 1;
+}
 
 message CreateObjectRequest {
   int32 project_id = 1;
   string object_name = 2;
+  // The company/user that creates the object
+  string username = 3;
 }
 
 message CreateObjectResponse {}

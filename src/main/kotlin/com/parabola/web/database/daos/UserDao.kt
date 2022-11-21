@@ -1,5 +1,6 @@
 package com.parabola.web.database.daos
 
+import com.parabola.web.database.tables.ObjectUserTable
 import com.parabola.web.database.tables.ProjectUserTable
 import com.parabola.web.database.tables.UserTable
 import org.jetbrains.exposed.dao.Entity
@@ -14,4 +15,5 @@ class UserDao(id: EntityID<String>): Entity<String>(id) {
     var role by UserTable.role
 
     var projects by ProjectDao via ProjectUserTable
+    var objects by ObjectDao via ObjectUserTable
 }

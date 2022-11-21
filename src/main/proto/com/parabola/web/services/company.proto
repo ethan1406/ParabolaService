@@ -9,4 +9,5 @@ option java_outer_classname = "CompanyProtos";
 message Company {
   string username = 1;
   string company_name = 2;
+  string role = 3;
 }

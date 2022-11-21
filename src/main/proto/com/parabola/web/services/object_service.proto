@@ -11,28 +11,59 @@ option java_outer_classname = "ObjectServiceProtos";
 service ObjectServce {
   rpc GetAllObjectsInProjectForUser (GetAllObjectsInProjectForUserRequest) returns (GetAllObjectsInProjectForUserResponse);
   rpc AddCompanyToObject(AddCompanyToObjectRequest) returns (AddCompanyToObjectResponse);
+  rpc GetAllCompaniesInObject(GetAllCompaniesInObjectRequest) returns (GetAllCompaniesInObjectResponse);
+  rpc UpdateObjectVersion(UpdateObjectVersionRequest) returns (UpdateObjectVersionResponse);
+  rpc ApproveObjectVersion(ApproveObjectVersionRequest) returns (ApproveObjectVersionResponse);
+
 }
 
 message Object {
-  bool is_primary = 1;
-  string latest_version = 2;
-  string current_version = 3;
-  bool did_approve = 4;
-
+  int32 object_id = 1;
+  string name = 2;
+  bool is_primary = 3;
+  string latest_version = 4;
+  string pending_version = 5;
+  bool did_approve = 6;
 }
 
 message GetAllObjectsInProjectForUserRequest {
-  Company company = 1;
+  string username = 1;
   int32 project_id = 2;
 }
 
 message GetAllObjectsInProjectForUserResponse {
-
+  repeated Object objects = 1;
 }
 
 message AddCompanyToObjectRequest {
-  Company company = 1;
-  int32 project_id = 2;
+  string adder_username = 1;
+  // username of the company to be added
+  string username_added = 2;
+  int32 object_id = 3;
 }
 
 message AddCompanyToObjectResponse {}
+
+message GetAllCompaniesInObjectRequest {
+  int32 object_id = 2;
+}
+
+message GetAllCompaniesInObjectResponse {
+  repeated Company companies = 1;
+}
+
+message UpdateObjectVersionRequest {
+  int32 object_id = 1;
+  string username = 2;
+  string updated_name = 3;
+  string updated_version = 4;
+}
+
+message UpdateObjectVersionResponse {}
+
+message ApproveObjectVersionRequest {
+  int32 object_id = 1;
+  string username = 2;
+}
+
+message ApproveObjectVersionResponse {}
