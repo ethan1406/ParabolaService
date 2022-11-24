@@ -11,6 +11,7 @@ option java_outer_classname = "UserServiceProtos";
 
 service UserService {
   rpc Signup(SignupRequest) returns (SignupResponse);
+  rpc GetCompanyInfo(GetCompanyInfoRequest) returns (GetCompanyInfoResponse);
   rpc GetAllProjects(GetAllProjectsRequest) returns (GetAllProjectsResponse);
   rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
 }
@@ -21,6 +22,14 @@ message SignupRequest {
 }
 
 message SignupResponse {}
+
+message GetCompanyInfoRequest {
+  string username = 1;
+}
+
+message GetCompanyInfoResponse {
+  Company company = 1;
+}
 
 message Project {
   int32 id = 1;

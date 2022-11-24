@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 
@@ -51,6 +52,44 @@ class UserService(
         }
 
         return signupResponse { }
+    }
+
+    override suspend fun getCompanyInfo(request: GetCompanyInfoRequest): GetCompanyInfoResponse {
+
+        val userCompany = withContext(Dispatchers.IO) {
+            try {
+                transaction(Database.connect(dataSource)) {
+                    addLogger(StdOutSqlLogger)
+
+                    UserTable.select { UserTable.username eq request.username }
+                        .map {
+                            company {
+                                username = request.username
+                                companyName = it[UserTable.companyName]
+                                role = it[UserTable.role]
+                            }
+                        }
+                        .firstOrNull() ?: throw StatusException(Status.UNKNOWN)
+
+                }
+            } catch (e: ExposedSQLException) {
+                logger.error(e) { "error creating user for ${request.username}" }
+
+                if (e.sqlState == "23505" || e.sqlState == "23000") {
+                    logger.error("user already exists")
+                    throw StatusException(Status.ALREADY_EXISTS)
+                }
+
+                throw StatusException(Status.UNKNOWN)
+            } catch (e: Exception) {
+                logger.error(e) { "error creating for ${request.username}" }
+                throw StatusException(Status.UNKNOWN)
+            }
+        }
+
+        return getCompanyInfoResponse {
+            company = userCompany
+        }
     }
 
     override suspend fun createProject(request: CreateProjectRequest): CreateProjectResponse {

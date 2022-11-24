@@ -14,7 +14,6 @@ service ProjectService {
   rpc GetAllCompanies(GetAllCompaniesRequest) returns (GetAllCompaniesResponse);
   rpc AddCompanyToProject(AddCompanyToProjectRequest) returns (AddCompanyToProjectResponse);
   rpc GetAllCompaniesInProject(GetAllCompaniesInProjectRequest) returns (GetAllCompaniesInProjectResponse);
-
   rpc CreateObjectInProject(CreateObjectRequest) returns (CreateObjectResponse);
 
 }

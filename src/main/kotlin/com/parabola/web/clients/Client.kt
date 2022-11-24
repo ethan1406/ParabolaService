@@ -34,14 +34,14 @@
 ////            }
 ////        )
 //
-//        objectStub.updateObjectVersion(
-//            updateObjectVersionRequest {
-//                username = "tony_son"
-//                updatedName = "new dad coming #2"
-//                updatedVersion = "1.03"
-//                objectId = 7
-//            }
-//        )
+////        objectStub.updateObjectVersion(
+////            updateObjectVersionRequest {
+////                username = "tony_son"
+////                updatedName = "new dad coming #2"
+////                updatedVersion = "1.03"
+////                objectId = 7
+////            }
+////        )
 ////        val response = objectStub.approveObjectVersion(
 ////            approveObjectVersionRequest {
 ////                username = "ethan_dad"
@@ -49,15 +49,19 @@
 ////            }
 ////        )
 //
-//        val objectResponse = objectStub.getAllObjectsInProjectForUser(
-//            getAllObjectsInProjectForUserRequest {
-//                username = "ethan_dad"
-//                projectId = 4
-//            }
-//        )
+////        val objectResponse = objectStub.getAllObjectsInProjectForUser(
+////            getAllObjectsInProjectForUserRequest {
+////                username = "ethan_dad"
+////                projectId = 4
+////            }
+////        )
+//
+//        val response = userStub.getCompanyInfo(getCompanyInfoRequest { username = "ethan_dad" })
+//
+//
 //
 //        println("got it")
-//        println(objectResponse.objectsList)
+//        println(response.company)
 //    }
 //
 //    override fun close() {
