@@ -3,12 +3,14 @@ package com.parabola.web.services
 import com.parabola.web.database.daos.ObjectDao
 import com.parabola.web.database.tables.ObjectTable
 import com.parabola.web.database.tables.ObjectUserTable
+import com.parabola.web.database.tables.ProjectUserTable
 import io.grpc.Status
 import io.grpc.StatusException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 
@@ -157,5 +159,27 @@ class ObjectService(
         }
 
         return approveObjectVersionResponse { }
+    }
+
+    override suspend fun removeCompanyInObject(request: RemoveCompanyInObjectRequest): RemoveCompanyInObjectResponse {
+
+        withContext(Dispatchers.IO) {
+            try {
+                transaction(Database.connect(dataSource)) {
+                    addLogger(StdOutSqlLogger)
+
+                    ObjectUserTable.deleteWhere {
+                        (user eq request.company.username) and
+                                (projectObject eq request.objectId)
+                    }
+                }
+
+            } catch (e: Exception) {
+                logger.error(e) { "error deleting company in project" }
+                throw StatusException(Status.UNKNOWN)
+            }
+        }
+
+        return removeCompanyInObjectResponse { }
     }
 }

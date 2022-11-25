@@ -11,10 +11,10 @@ option java_outer_classname = "ObjectServiceProtos";
 service ObjectServce {
   rpc GetAllObjectsInProjectForUser (GetAllObjectsInProjectForUserRequest) returns (GetAllObjectsInProjectForUserResponse);
   rpc AddCompanyToObject(AddCompanyToObjectRequest) returns (AddCompanyToObjectResponse);
+  rpc RemoveCompanyInObject(RemoveCompanyInObjectRequest) returns (RemoveCompanyInObjectResponse);
   rpc GetAllCompaniesInObject(GetAllCompaniesInObjectRequest) returns (GetAllCompaniesInObjectResponse);
   rpc UpdateObjectVersion(UpdateObjectVersionRequest) returns (UpdateObjectVersionResponse);
   rpc ApproveObjectVersion(ApproveObjectVersionRequest) returns (ApproveObjectVersionResponse);
-
 }
 
 message Object {
@@ -44,8 +44,15 @@ message AddCompanyToObjectRequest {
 
 message AddCompanyToObjectResponse {}
 
+message RemoveCompanyInObjectRequest {
+  int32 object_id = 1;
+  Company company = 2;
+}
+
+message RemoveCompanyInObjectResponse {}
+
 message GetAllCompaniesInObjectRequest {
-  int32 object_id = 2;
+  int32 object_id = 1;
 }
 
 message GetAllCompaniesInObjectResponse {

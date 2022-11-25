@@ -4,6 +4,7 @@ import com.parabola.web.database.daos.ProjectDao
 import com.parabola.web.database.daos.UserDao
 import com.parabola.web.database.tables.ObjectTable
 import com.parabola.web.database.tables.ObjectUserTable
+import com.parabola.web.database.tables.ProjectTable
 import com.parabola.web.database.tables.ProjectUserTable
 import io.grpc.Status
 import io.grpc.StatusException
@@ -11,8 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
@@ -116,9 +120,30 @@ class ProjectService(
                 logger.error(e) {  }
                 throw StatusException(Status.UNKNOWN)
             }
-
         }
 
         return createObjectResponse { }
+    }
+
+    override suspend fun removeCompanyInProject(request: RemoveCompanyInProjectRequest): RemoveCompanyInProjectResponse {
+
+        withContext(Dispatchers.IO) {
+            try {
+                transaction(Database.connect(dataSource)) {
+                    addLogger(StdOutSqlLogger)
+
+                    ProjectUserTable.deleteWhere {
+                        (user eq request.company.username) and
+                                (project eq request.projectId)
+                    }
+                }
+
+            } catch (e: Exception) {
+                logger.error(e) { "error deleting company in project" }
+                throw StatusException(Status.UNKNOWN)
+            }
+        }
+
+        return removeCompanyInProjectResponse { }
     }
 }
