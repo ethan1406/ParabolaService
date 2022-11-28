@@ -140,12 +140,12 @@ class UserService(
             transaction(Database.connect(dataSource)) {
                 addLogger(StdOutSqlLogger)
 
-                ProjectTable.deleteWhere {
-                    id eq request.projectId
-                }
-
                 ProjectUserTable.deleteWhere {
                     project eq request.projectId
+                }
+
+                ProjectTable.deleteWhere {
+                    id eq request.projectId
                 }
             }
         }

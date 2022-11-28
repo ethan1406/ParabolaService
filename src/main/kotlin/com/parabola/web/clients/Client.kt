@@ -56,12 +56,13 @@
 ////            }
 ////        )
 //
-//        val response = userStub.getCompanyInfo(getCompanyInfoRequest { username = "ethan_dad" })
+//        //val response = userStub.getCompanyInfo(getCompanyInfoRequest { username = "ethan_dad" })
 //
+//        val response = objectStub.deleteObject(deleteObjectRequest { objectId = 18 })
 //
 //
 //        println("got it")
-//        println(response.company)
+//        println(response)
 //    }
 //
 //    override fun close() {

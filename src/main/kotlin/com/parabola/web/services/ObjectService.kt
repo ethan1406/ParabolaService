@@ -188,12 +188,12 @@ class ObjectService(
             transaction(Database.connect(dataSource)) {
                 addLogger(StdOutSqlLogger)
 
-                ObjectTable.deleteWhere {
-                    id eq request.objectId
-                }
-
                 ObjectUserTable.deleteWhere {
                     projectObject eq request.objectId
+                }
+
+                ObjectTable.deleteWhere {
+                    id eq request.objectId
                 }
             }
         }
