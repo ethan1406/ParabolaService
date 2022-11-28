@@ -14,6 +14,8 @@ service UserService {
   rpc GetCompanyInfo(GetCompanyInfoRequest) returns (GetCompanyInfoResponse);
   rpc GetAllProjects(GetAllProjectsRequest) returns (GetAllProjectsResponse);
   rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+  rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
+  rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
 }
 
 
@@ -53,3 +55,16 @@ message CreateProjectRequest {
 message CreateProjectResponse {
   int32 project_id = 1;
 }
+
+message UpdateProjectRequest {
+  int32 project_id = 1;
+  string project_name = 2;
+}
+
+message UpdateProjectResponse {}
+
+message DeleteProjectRequest {
+  int32 project_id = 1;
+}
+
+message DeleteProjectResponse {}

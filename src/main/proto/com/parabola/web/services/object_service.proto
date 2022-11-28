@@ -12,6 +12,7 @@ service ObjectServce {
   rpc GetAllObjectsInProjectForUser (GetAllObjectsInProjectForUserRequest) returns (GetAllObjectsInProjectForUserResponse);
   rpc AddCompanyToObject(AddCompanyToObjectRequest) returns (AddCompanyToObjectResponse);
   rpc RemoveCompanyInObject(RemoveCompanyInObjectRequest) returns (RemoveCompanyInObjectResponse);
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse);
   rpc GetAllCompaniesInObject(GetAllCompaniesInObjectRequest) returns (GetAllCompaniesInObjectResponse);
   rpc UpdateObjectVersion(UpdateObjectVersionRequest) returns (UpdateObjectVersionResponse);
   rpc ApproveObjectVersion(ApproveObjectVersionRequest) returns (ApproveObjectVersionResponse);
@@ -50,6 +51,12 @@ message RemoveCompanyInObjectRequest {
 }
 
 message RemoveCompanyInObjectResponse {}
+
+message DeleteObjectRequest {
+  int32 object_id = 1;
+}
+
+message DeleteObjectResponse {}
 
 message GetAllCompaniesInObjectRequest {
   int32 object_id = 1;

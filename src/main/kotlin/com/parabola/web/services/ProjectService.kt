@@ -95,7 +95,7 @@ class ProjectService(
 
     override suspend fun createObjectInProject(request: CreateObjectRequest): CreateObjectResponse {
 
-        withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             try {
                 transaction(Database.connect(dataSource)) {
                     addLogger(StdOutSqlLogger)
@@ -114,15 +114,17 @@ class ProjectService(
                         it[isUserPrimary] = true
                         it[pendingVersion] = defaultVersion
                     }
-                }
 
+                    createObjectResponse {
+                        objectId = id.value
+                    }
+                }
             } catch (e: Exception) {
                 logger.error(e) {  }
                 throw StatusException(Status.UNKNOWN)
             }
         }
 
-        return createObjectResponse { }
     }
 
     override suspend fun removeCompanyInProject(request: RemoveCompanyInProjectRequest): RemoveCompanyInProjectResponse {

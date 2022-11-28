@@ -3,7 +3,6 @@ package com.parabola.web.services
 import com.parabola.web.database.daos.ObjectDao
 import com.parabola.web.database.tables.ObjectTable
 import com.parabola.web.database.tables.ObjectUserTable
-import com.parabola.web.database.tables.ProjectUserTable
 import io.grpc.Status
 import io.grpc.StatusException
 import kotlinx.coroutines.Dispatchers
@@ -181,5 +180,24 @@ class ObjectService(
         }
 
         return removeCompanyInObjectResponse { }
+    }
+
+    override suspend fun deleteObject(request: DeleteObjectRequest): DeleteObjectResponse {
+
+        withContext(Dispatchers.IO) {
+            transaction(Database.connect(dataSource)) {
+                addLogger(StdOutSqlLogger)
+
+                ObjectTable.deleteWhere {
+                    id eq request.objectId
+                }
+
+                ObjectUserTable.deleteWhere {
+                    projectObject eq request.objectId
+                }
+            }
+        }
+
+        return deleteObjectResponse { }
     }
 }

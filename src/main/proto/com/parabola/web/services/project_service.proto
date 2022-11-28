@@ -16,7 +16,6 @@ service ProjectService {
   rpc GetAllCompaniesInProject(GetAllCompaniesInProjectRequest) returns (GetAllCompaniesInProjectResponse);
   rpc CreateObjectInProject(CreateObjectRequest) returns (CreateObjectResponse);
   rpc RemoveCompanyInProject(RemoveCompanyInProjectRequest) returns (RemoveCompanyInProjectResponse);
-
 }
 
 message GetAllCompaniesRequest {}
@@ -47,7 +46,9 @@ message CreateObjectRequest {
   string username = 3;
 }
 
-message CreateObjectResponse {}
+message CreateObjectResponse {
+  int32 object_id = 1;
+}
 
 message RemoveCompanyInProjectRequest {
   int32 project_id = 1;

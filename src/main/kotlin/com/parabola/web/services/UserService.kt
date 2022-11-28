@@ -11,11 +11,14 @@ import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import javax.sql.DataSource
 
 class UserService(
@@ -94,23 +97,60 @@ class UserService(
 
     override suspend fun createProject(request: CreateProjectRequest): CreateProjectResponse {
 
-        withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             transaction(Database.connect(dataSource)) {
                 addLogger(StdOutSqlLogger)
 
-                val projectId = ProjectTable.insert {
+                val id = ProjectTable.insert {
                     it[projectName] = request.projectName
                 } get ProjectTable.id
 
                 ProjectUserTable.insert {
                     it[user] = request.company.username
                     it[companyName] = request.company.companyName
-                    it[project] = projectId
+                    it[project] = id
+                }
+
+                createProjectResponse {
+                    projectId = id.value
+                }
+            }
+        }
+    }
+
+    override suspend fun updateProject(request: UpdateProjectRequest): UpdateProjectResponse {
+
+        withContext(Dispatchers.IO) {
+            transaction(Database.connect(dataSource)) {
+                addLogger(StdOutSqlLogger)
+
+                ProjectTable.update({ ProjectTable.id eq request.projectId }) {
+                    it[projectName] = request.projectName
                 }
             }
         }
 
-        return createProjectResponse { }
+        return updateProjectResponse { }
+
+    }
+
+    override suspend fun deleteProject(request: DeleteProjectRequest): DeleteProjectResponse {
+
+        withContext(Dispatchers.IO) {
+            transaction(Database.connect(dataSource)) {
+                addLogger(StdOutSqlLogger)
+
+                ProjectTable.deleteWhere {
+                    id eq request.projectId
+                }
+
+                ProjectUserTable.deleteWhere {
+                    project eq request.projectId
+                }
+            }
+        }
+
+        return deleteProjectResponse { }
     }
 
     override suspend fun getAllProjects(request: GetAllProjectsRequest): GetAllProjectsResponse {
